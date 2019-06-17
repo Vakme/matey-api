@@ -15,6 +15,7 @@
     "mongoose": "^5.6.0"
   },
   "scripts": {
-    "run": "nodemon --experimental-modules src/app.mjs"
+    "start": "node --experimental-modules src/app.mjs",
+    "nodemon": "node --experimental-modules src/app.mjs"
   }
 }
