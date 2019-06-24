@@ -40,10 +40,10 @@ export async function sum_up_funds(req, res, next) {
 export async function add_expense(req, res, next) {
   try {
     await User.findOneAndUpdate(
-      {"username": req.headers.authorization},
+      {"username": req.email},
       {"$push": {"funds": req.body}}
       );
-    let obj = await User.findOne({"username": req.headers.authorization});
+    let obj = await User.findOne({"username": req.email});
     res.status(201).send(obj)
   } catch (e) {
     res.send(e)
@@ -53,11 +53,11 @@ export async function add_expense(req, res, next) {
 export async function remove_expense(req, res, next) {
   try {
     await User.findOneAndUpdate(
-      {"username": req.headers.authorization},
+      {"username": req.email},
       {"$pull": {"funds": {"name": req.body.name}}},
       {"multi": true}
     );
-    let obj = await User.findOne({"username": req.headers.authorization});
+    let obj = await User.findOne({"username": req.email});
     res.status(204).send(obj)
   } catch (e) {
     res.send(e)
@@ -66,7 +66,7 @@ export async function remove_expense(req, res, next) {
 
 export async function get_user_expenses(req, res, next) {
   try {
-    let obj = await User.findOne({"username": req.headers.authorization});
+    let obj = await User.findOne({"email": req.email});
     res.status(200).send(obj)
   } catch (e) {
     res.send(e)
