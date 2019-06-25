@@ -4,6 +4,7 @@
   "type": "module",
   "main": "src/app.mjs",
   "dependencies": {
+    "@google-cloud/debug-agent": "^4.0.1",
     "axios": "^0.19.0",
     "body-parser": "latest",
     "cors": "^2.8.5",
@@ -13,9 +14,7 @@
     "express-session": "^1.16.2",
     "google-auth-library": "^4.2.2",
     "morgan": "^1.9.1",
-    "vue-axios": "^2.1.4"
-  },
-  "devDependencies": {
+    "vue-axios": "^2.1.4",
     "mongoose": "^5.6.0"
   },
   "scripts": {

@@ -9,6 +9,10 @@ import morgan from "morgan";
 import { routes } from "./routes/fundRoutes"
 import dotenv from "dotenv";
 import isAuthenticated from "./controllers/authController";
+import fs from "fs";
+import debugAgent from '@google-cloud/debug-agent';
+
+debugAgent.start();
 
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
@@ -28,6 +32,7 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 //app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(isAuthenticated);
 
+
 if(!isProduction) {
   app.use(errorHandler());
   mongoose.set('debug', true);
@@ -35,6 +40,10 @@ if(!isProduction) {
 }
 
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb://localhost/matey', {useNewUrlParser: true});
+mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true});
 routes(app);
-app.listen(8000, "matey.io", () => console.log('Server running on http://matey.io:8000/'));
+
+const server = app.listen(process.env.PORT || 8080, () => {
+  const port = server.address().port;
+  console.log(`App listening on port ${port}`);
+});

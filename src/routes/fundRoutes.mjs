@@ -1,6 +1,9 @@
 import * as controller from '../controllers/fundController'
 
 export function routes(app) {
+  app.route('/')
+      .get(controller.health_check);
+
   app.route('/users')
     .get(controller.list_all_users);
   

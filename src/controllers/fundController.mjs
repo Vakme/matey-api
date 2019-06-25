@@ -72,3 +72,9 @@ export async function get_user_expenses(req, res, next) {
     res.send(e)
   }
 }
+
+export function health_check(req, res, next) {
+  res.send({
+    health: "ok"
+  })
+}

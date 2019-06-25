@@ -15,6 +15,8 @@ async function verify(token) {
 }
 
 export default async function isAuthenticated(req, res, next) {
+  if(req.path ==='/')
+    return next();
   try {
     const token = req.headers.authorization.split(' ')[1];
     req.email = await verify(token);

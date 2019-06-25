@@ -1,0 +1,6 @@
+runtime: nodejs10
+service: matey-api
+env_variables:
+  APP_ID: <APP_ID>
+  CLIENT_ID: <CLIENT_ID>
+  DB_HOST: <DB_HOST>
