@@ -9,6 +9,8 @@ export function routes(app) {
   
   app.route('/funds')
     .get(controller.get_user_expenses)
-    .post(controller.add_expense)
+    .post(controller.add_expense);
+  
+  app.route('/funds/:name')
     .delete(controller.remove_expense);
 }

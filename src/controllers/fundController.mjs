@@ -40,10 +40,10 @@ export async function sum_up_funds(req, res, next) {
 export async function add_expense(req, res, next) {
   try {
     await User.findOneAndUpdate(
-      {"username": req.email},
+      {"email": req.email},
       {"$push": {"funds": req.body}}
       );
-    let obj = await User.findOne({"username": req.email});
+    let obj = await User.findOne({"email": req.email});
     res.status(201).send(obj)
   } catch (e) {
     res.send(e)
@@ -53,11 +53,11 @@ export async function add_expense(req, res, next) {
 export async function remove_expense(req, res, next) {
   try {
     await User.findOneAndUpdate(
-      {"username": req.email},
-      {"$pull": {"funds": {"name": req.body.name}}},
+      {"email": req.email},
+      {"$pull": {"funds": {"name": req.params.name}}},
       {"multi": true}
     );
-    let obj = await User.findOne({"username": req.email});
+    let obj = await User.findOne({"email": req.email});
     res.status(204).send(obj)
   } catch (e) {
     res.send(e)
