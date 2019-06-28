@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../models/User.mjs';
 
 export async function list_all_users(req, res, next) {
@@ -75,6 +76,7 @@ export async function get_user_expenses(req, res, next) {
 
 export function health_check(req, res, next) {
   res.send({
-    health: "ok"
+    health: "ok",
+    dbState: mongoose.STATES[mongoose.connection.readyState]
   })
 }
