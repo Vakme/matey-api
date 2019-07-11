@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from '../models/User.mjs';
+import User from '../models/Userec.mjs';
 
 export async function list_all_users(req, res, next) {
   try {

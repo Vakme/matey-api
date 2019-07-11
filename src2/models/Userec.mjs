@@ -8,10 +8,10 @@ const Fund = new Schema({
   value: Number
 });
 
-const User = new Schema({
+const Userec = new Schema({
   name: String,
   funds: [Fund]
 });
 
 
-export default mongoose.model('User', User);
+export default mongoose.model('Userec', Userec);
