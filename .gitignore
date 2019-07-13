@@ -8,3 +8,7 @@ app.yaml
 *.crt
 *.csr
 *.key
+
+dist/
+coverage/
+*.log
