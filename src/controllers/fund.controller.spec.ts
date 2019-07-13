@@ -1,4 +1,3 @@
-import {summarizers} from "istanbul-lib-report";
 import mockingoose from "mockingoose";
 import * as mongoose from "mongoose";
 import {Fund} from "../models/fund/fund";
