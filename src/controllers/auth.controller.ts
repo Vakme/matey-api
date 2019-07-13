@@ -1,9 +1,11 @@
 import dotenv from "dotenv";
-import auth from "google-auth-library";
+import { OAuth2Client } from "google-auth-library";
+import {Action} from "routing-controllers";
 
 dotenv.config();
-const client = new auth.OAuth2Client(process.env.APP_ID);
+const client = new OAuth2Client(process.env.APP_ID);
 
+// @ts-ignore
 async function verify(token) {
     const ticket = await client.verifyIdToken({
         audience: process.env.CLIENT_ID,
@@ -14,14 +16,13 @@ async function verify(token) {
 
 }
 
-export default async function isAuthenticated(req, res, next) {
-    if (req.path === "/") {
-        return next();
-    }
+export async function isAuthenticated(action: Action) {
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        req.email = await verify(token);
-        return next();
+        const token = action.request.headers.authorization.split(" ")[1];
+        return await verify(token);
     } catch (error) {
-        res.status(403).send(error);
+        console.log(error);
+        return;
     }
+
+}

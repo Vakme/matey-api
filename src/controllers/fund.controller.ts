@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
 import {
     Body,
+    CurrentUser,
     Delete,
     Get,
     HttpCode,
     InternalServerError,
     JsonController,
-    OnUndefined,
     Param,
     Post
 } from "routing-controllers";
 import {Fund} from "../interfaces/fund.interface";
-import {IUser, UserReq} from "../interfaces/user.interface";
 import User from "../models/user";
 
 @JsonController()
@@ -26,18 +25,19 @@ export class FundController {
         };
     }
 
+    // TODO: Change to @Authorized - email is not needed
     @Get("/users")
-    public async getAllUsers() {
+    public async getAllUsers(@CurrentUser({ required: true }) email: string) {
         try {
-            const users = await User.find({});
-            return users.map((u) => u.toJSON());
+            return await User.find({});
         } catch (err) {
             throw new InternalServerError(err);
         }
     }
 
+    // TODO: Change to @Authorized - email is not needed
     @Get("/summary")
-    public async sumUpFunds() {
+    public async sumUpFunds(@CurrentUser({ required: true }) email: string) {
         try {
             const sums = await User.aggregate([
                 {
@@ -68,9 +68,9 @@ export class FundController {
     }
 
     @Get("/funds")
-    public async getUserExpenses() {
+    public async getUserExpenses(@CurrentUser({ required: true }) email: string) {
         try {
-            const user = await User.findOne({email: "email"});
+            const user = await User.findOne({email});
             return user.toJSON();
         } catch (err) {
             throw new InternalServerError(err);
@@ -79,14 +79,13 @@ export class FundController {
 
     @HttpCode(201)
     @Post("/funds")
-    public async addExpense(@Body() fund: Fund) {
+    public async addExpense(@CurrentUser({ required: true }) email: string, @Body() fund: Fund) {
         try {
             await User.findOneAndUpdate(
-                {email: "email"},
+                {email},
                 {$push: {funds: fund}}
             );
-            const obj = await User.findOne({email: "email"});
-            return obj.toJSON();
+            return await User.findOne({email});
         } catch (err) {
             throw new InternalServerError(err);
         }
@@ -95,13 +94,13 @@ export class FundController {
 
     @Delete("/funds/:name")
     @HttpCode(204)
-    public async removeExpense(@Param("name") name: string): Promise<void> {
+    public async removeExpense(@CurrentUser({ required: true }) email: string, @Param("name") name: string) {
         try {
             await User.findOneAndUpdate(
-                {email: "email"},
+                {email},
                 {$pull: {funds: {name}}}
             );
-            const obj = await User.findOne({email: "email"});
+            const obj = await User.findOne({email});
             return obj.toJSON();
         } catch (err) {
             throw new InternalServerError(err);
