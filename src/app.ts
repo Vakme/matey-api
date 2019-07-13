@@ -8,7 +8,7 @@ import morgan from "morgan";
 import "reflect-metadata";
 import { useExpressServer } from "routing-controllers";
 import { isAuthenticated } from "./controllers/auth.controller";
-import { FundController } from "./controllers/fund.controller";
+import FundController from "./controllers/fund.controller";
 
 const isProduction = process.env.NODE_ENV === "production";
 // mongoose.Promise = global.Promise;

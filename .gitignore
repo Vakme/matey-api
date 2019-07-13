@@ -10,4 +10,5 @@ app.yaml
 *.key
 
 dist/
+coverage/
 *.log

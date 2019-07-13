@@ -1,5 +1,5 @@
 import {arrayProp, prop, Typegoose} from "typegoose";
-import { Fund } from "./fund";
+import { Fund } from "../fund/fund";
 
 export class User extends Typegoose {
 

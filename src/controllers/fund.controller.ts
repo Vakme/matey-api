@@ -11,15 +11,15 @@ import {
     Param,
     Post
 } from "routing-controllers";
-import {Fund} from "../models/fund";
-import UserModel from "../models/user";
+import {Fund} from "../models/fund/fund";
+import UserModel from "../models/user/user";
 
 @JsonController()
-export class FundController {
+export default class FundController {
     @Get("/")
     public async getHealthCheck() {
         // @ts-ignore
-        const mongoState = mongoose.STATES[mongoose.connection.readyState];
+        const mongoState = mongoose.STATES[mongoose.connection ? mongoose.connection.readyState : 0];
         return {
             dbState: mongoState,
             health: "ok"
@@ -34,30 +34,26 @@ export class FundController {
 
     @Get("/summary")
     public async sumUpFunds(@CurrentUser({ required: true }) email: string) {
-        try {
-            const summaryQuery = [{
-                $project: {
-                    summary: {
-                        $divide: [{
-                            $sum: "$funds.value"
-                        }, 2]
-                    },
-                    user: "$email"
-                }
-            }];
-            const sums = await UserModel.aggregate(summaryQuery);
-            return {
-                creditor: sums.find((elem) =>
-                    elem.summary === Math.max(...sums.map((maxElem) =>
-                        parseFloat(maxElem.summary))
-                    )
-                ).user,
-                diff: sums.reduce((prev, next) =>
-                    Math.abs(prev.summary - next.summary))
-            };
-        } catch (err) {
-            throw new InternalServerError(err);
-        }
+        const summaryQuery = [{
+            $project: {
+                summary: {
+                    $divide: [{
+                        $sum: "$funds.value"
+                    }, 2]
+                },
+                user: "$email"
+            }
+        }];
+        const sums = await UserModel.aggregate(summaryQuery);
+        return {
+            creditor: sums.find((elem) =>
+                elem.summary === Math.max(...sums.map((maxElem) =>
+                    parseFloat(maxElem.summary))
+                )
+            ).user,
+            diff: sums.reduce((prev, next) =>
+                Math.abs(prev.summary - next.summary))
+        };
     }
 
     @Get("/funds")
@@ -70,7 +66,6 @@ export class FundController {
     @Post("/funds")
     public async addExpense(@CurrentUser({ required: true }) email: string, @Body() fund: Fund) {
         const parent: any = await UserModel.findOne({email});
-        console.log(parent);
         parent.funds.push(fund);
         await parent.save();
         return parent.toJSON();
