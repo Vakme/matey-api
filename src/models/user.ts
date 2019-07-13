@@ -1,28 +1,29 @@
-import { Document, Model, model, Schema } from "mongoose";
-import { IUser } from "../interfaces/user.interface";
-interface IUserModel extends Document, IUser {}
+import {arrayProp, prop, Typegoose} from "typegoose";
+import { Fund } from "./fund";
 
-const FundSchema: Schema = new Schema({
-    date: Date,
-    name: String,
-    value: Number
-}, {
-    toJSON: {
-        transform(doc, ret) {
-            delete ret._id;
+export class User extends Typegoose {
+
+    @prop({ unique: true })
+    public email: string;
+
+    @arrayProp({items: Fund})
+    public funds: Fund[];
+
+}
+
+const UserModel = new User().getModelForClass(User, {
+    schemaOptions: {
+        toJSON: {
+            transform(doc, ret) {
+                ret.funds.map((f: any) => {
+                    f.id = f._id.toHexString();
+                    delete f._id;
+                });
+                delete ret._id;
+                delete ret.__v;
+            }
         }
     }
 });
 
-const UserSchema: Schema = new Schema({
-    funds: [FundSchema],
-    name: String
-}, {
-    toJSON: {
-        transform(doc, ret) {
-            delete ret._id;
-        }
-    }
-});
-
-export default model<IUserModel>("User", UserSchema);
+export default UserModel;

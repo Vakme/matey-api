@@ -6,12 +6,13 @@ import {
     Get,
     HttpCode,
     InternalServerError,
-    JsonController,
+    JsonController, NotFoundError,
+    OnUndefined,
     Param,
     Post
 } from "routing-controllers";
-import {Fund} from "../interfaces/fund.interface";
-import User from "../models/user";
+import {Fund} from "../models/fund";
+import UserModel from "../models/user";
 
 @JsonController()
 export class FundController {
@@ -25,34 +26,26 @@ export class FundController {
         };
     }
 
-    // TODO: Change to @Authorized - email is not needed
     @Get("/users")
     public async getAllUsers(@CurrentUser({ required: true }) email: string) {
-        try {
-            return await User.find({});
-        } catch (err) {
-            throw new InternalServerError(err);
-        }
+        const users = await UserModel.find({});
+        return users.map((u) => u.toJSON());
     }
 
-    // TODO: Change to @Authorized - email is not needed
     @Get("/summary")
     public async sumUpFunds(@CurrentUser({ required: true }) email: string) {
         try {
-            const sums = await User.aggregate([
-                {
-                    $project: {
-                        summary: {
-                            $divide: [
-                                {
-                                    $sum: "$funds.value"
-                                }, 2
-                            ]
-                        },
-                        user: "$username"
-                    }
+            const summaryQuery = [{
+                $project: {
+                    summary: {
+                        $divide: [{
+                            $sum: "$funds.value"
+                        }, 2]
+                    },
+                    user: "$email"
                 }
-            ]);
+            }];
+            const sums = await UserModel.aggregate(summaryQuery);
             return {
                 creditor: sums.find((elem) =>
                     elem.summary === Math.max(...sums.map((maxElem) =>
@@ -69,41 +62,30 @@ export class FundController {
 
     @Get("/funds")
     public async getUserExpenses(@CurrentUser({ required: true }) email: string) {
-        try {
-            const user = await User.findOne({email});
-            return user.toJSON();
-        } catch (err) {
-            throw new InternalServerError(err);
-        }
+        const user = await UserModel.findOne({email});
+        return user.toJSON();
     }
 
     @HttpCode(201)
     @Post("/funds")
     public async addExpense(@CurrentUser({ required: true }) email: string, @Body() fund: Fund) {
-        try {
-            await User.findOneAndUpdate(
-                {email},
-                {$push: {funds: fund}}
-            );
-            return await User.findOne({email});
-        } catch (err) {
-            throw new InternalServerError(err);
-        }
+        const parent: any = await UserModel.findOne({email});
+        console.log(parent);
+        parent.funds.push(fund);
+        await parent.save();
+        return parent.toJSON();
 
     }
 
-    @Delete("/funds/:name")
-    @HttpCode(204)
-    public async removeExpense(@CurrentUser({ required: true }) email: string, @Param("name") name: string) {
-        try {
-            await User.findOneAndUpdate(
-                {email},
-                {$pull: {funds: {name}}}
-            );
-            const obj = await User.findOne({email});
-            return obj.toJSON();
-        } catch (err) {
-            throw new InternalServerError(err);
+    @Delete("/funds/:id")
+    @OnUndefined(204)
+    public async removeExpense(@CurrentUser({ required: true }) email: string, @Param("id") id: string) {
+        const parent: any = await UserModel.findOne({email});
+        if (!parent.funds.id(id)) {
+            throw new NotFoundError("Item does not exist");
         }
+        parent.funds.id(id).remove();
+        await parent.save();
+        return parent.funds.id(id);
     }
 }

@@ -33,6 +33,8 @@ useExpressServer(app, {
 });
 
 // start the Express server
-app.listen( port, () => {
+const server = app.listen( port, () => {
     console.log( `server started at http://localhost:${ port }` );
 } );
+
+export default server;

@@ -427,6 +427,10 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.1.tgz#dc488842312a7f075149312905b5e3c0b054c79d"
 
+"@types/mockingoose@^2.11.0":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@types/mockingoose/-/mockingoose-2.11.0.tgz#6d1dc5721873add45fbb84e1dddde2284c8fe1b4"
+
 "@types/mongodb@*", "@types/mongodb@^3.1.28":
   version "3.1.28"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.28.tgz#c049cdff343788d77f5cc8c5f2e4af72ba7d047b"
@@ -3138,6 +3142,10 @@ mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+mockingoose@^2.13.1:
+  version "2.13.1"
+  resolved "https://registry.yarnpkg.com/mockingoose/-/mockingoose-2.13.1.tgz#8551ba0442acc62b82309927b2bd810aa34a2af9"
+
 mongodb-core@3.2.7:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-3.2.7.tgz#a8ef1fe764a192c979252dacbc600dc88d77e28f"
@@ -4445,6 +4453,12 @@ type-is@^1.6.4, type-is@~1.6.17, type-is@~1.6.18:
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+
+typegoose@^5.8.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/typegoose/-/typegoose-5.8.0.tgz#28721dabf53999097b20800fd9f38ae182b64d78"
+  dependencies:
+    reflect-metadata "^0.1.13"
 
 typescript@^3.5.3:
   version "3.5.3"

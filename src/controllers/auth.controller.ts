@@ -17,6 +17,9 @@ async function verify(token) {
 }
 
 export async function isAuthenticated(action: Action) {
+    if (process.env.TEST) {
+       return process.env.TEST_EMAIL;
+    }
     try {
         const token = action.request.headers.authorization.split(" ")[1];
         return await verify(token);
@@ -24,5 +27,4 @@ export async function isAuthenticated(action: Action) {
         console.log(error);
         return;
     }
-
 }
