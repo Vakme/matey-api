@@ -20,20 +20,18 @@ jobs:
 
     steps:
       - checkout
-
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
       - run: yarn install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
 
       # run tests!
       - run: yarn cov
@@ -42,19 +40,28 @@ jobs:
           path: results
       - codecov/upload:
           file: coverage/lcov.info
+
+      - persist_to_workspace:
+          root: .
+          paths: dist
   deploy:
     docker:
       - image: google/cloud-sdk
     steps:
+      - checkout
+
+      - attach_workspace:
+          at: .
+      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run: yarn deploy
+      - run: gcloud app deploy
 
 workflows:
   version: 2.1
