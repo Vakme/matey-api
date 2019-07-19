@@ -26,15 +26,21 @@ jobs:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run: yarn install
+      - run:
+          name: Install dependencies
+          command: yarn install
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn build
+      - run:
+          name: Build artifact
+          command: yarn build
       # run tests!
-      - run: yarn cov
+      - run:
+          name: Run test and coverage
+          command: yarn cov
 
       - store_test_results:
           path: results
@@ -58,11 +64,15 @@ jobs:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run: cp app.yaml.sample app.yaml
-      - run: |
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run: gcloud app deploy
+      - run:
+          name: Create config
+          command: cp app.yaml.sample app.yaml
+      - run:
+          name: Authorize Google SDK
+          command: echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+      - run:
+          name: Deploy app
+          command: gcloud --quiet app deploy
 
 workflows:
   version: 2.1
