@@ -23,11 +23,11 @@
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
-    "prestart": "npm run build",
+    "prestart": "yarn build",
     "start": "node .",
     "test": "jest",
     "cov": "jest --coverage",
-    "deploy": "npm run build && gcloud app deploy "
+    "deploy": "yarn build && gcloud app deploy "
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
