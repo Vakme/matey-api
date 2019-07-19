@@ -69,7 +69,9 @@ jobs:
           command: cp app.yaml.sample app.yaml
       - run:
           name: Authorize Google SDK
-          command: echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
           name: Deploy app
           command: gcloud --quiet app deploy
