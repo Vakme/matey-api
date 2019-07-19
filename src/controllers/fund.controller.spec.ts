@@ -116,7 +116,7 @@ describe("test fund controller", () => {
         const summaryDividedObj = [{
             summary: 100,
             user: "a"
-        },{
+        }, {
             summary: 50,
             user: "b"
         }];
@@ -126,7 +126,7 @@ describe("test fund controller", () => {
         };
         mockingoose(UserModel).toReturn(summaryDividedObj, "aggregate");
         return fundController.sumUpFunds("name@email.com").then((doc) => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(exp)
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(exp);
         });
     });
 });

@@ -9,6 +9,7 @@ app.yaml
 *.csr
 *.key
 
+results/
 dist/
 coverage/
 *.log
