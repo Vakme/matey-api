@@ -65,6 +65,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run:
+          name: Install envsubst
+          command: sudo apt-get update && sudo apt-get install gettext-base
+      - run:
           name: Substitute variables
           command: envsubst < app.yaml.sample > app.yaml
       - run:
