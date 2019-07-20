@@ -26,6 +26,7 @@ const port = process.env.PORT || 8080; // default port to listen
 
 mongoose.set("useFindAndModify", false);
 mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true});
+console.log(process.env.DB_HOST);
 
 useExpressServer(app, {
     controllers: [FundController],
