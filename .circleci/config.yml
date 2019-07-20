@@ -66,7 +66,7 @@ jobs:
             - v1-dependencies-
       - run:
           name: Install envsubst
-          command: sudo apt-get update && sudo apt-get install gettext-base
+          command: apt-get update && apt-get install gettext-base
       - run:
           name: Substitute variables
           command: envsubst < app.yaml.sample > app.yaml
