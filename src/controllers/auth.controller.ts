@@ -2,7 +2,10 @@ import dotenv from "dotenv";
 import { OAuth2Client } from "google-auth-library";
 import {Action} from "routing-controllers";
 
-dotenv.config();
+const isProduction = process.env.NODE_ENV === "production";
+if (!isProduction) {
+    dotenv.config();
+}
 const client = new OAuth2Client(process.env.APP_ID);
 
 // @ts-ignore
