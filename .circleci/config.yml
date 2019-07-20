@@ -65,8 +65,8 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run:
-          name: Create config
-          command: cp app.yaml.sample app.yaml
+          name: Substitute variables
+          command: envsubst < app.yaml.sample > app.yaml
       - run:
           name: Authorize Google SDK
           command: |
