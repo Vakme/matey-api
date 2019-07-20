@@ -1,4 +1,3 @@
-import debugAgent from "@google-cloud/debug-agent"
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -17,7 +16,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("dev"));
-debugAgent.start();
 
 if (!isProduction) {
     app.use(errorHandler());
