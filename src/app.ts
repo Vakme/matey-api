@@ -1,3 +1,4 @@
+import debugAgent from "@google-cloud/debug-agent"
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -12,17 +13,18 @@ import FundController from "./controllers/fund.controller";
 
 const isProduction = process.env.NODE_ENV === "production";
 // mongoose.Promise = global.Promise;
-const port = process.env.PORT || 8080; // default port to listen
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("dev"));
+debugAgent.start();
 
 if (!isProduction) {
     app.use(errorHandler());
     mongoose.set("debug", true);
-    dotenv.config();
+ //   dotenv.config();
 }
+const port = process.env.PORT || 8080; // default port to listen
 
 mongoose.set("useFindAndModify", false);
 mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true});

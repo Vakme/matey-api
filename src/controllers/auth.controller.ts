@@ -4,7 +4,7 @@ import {Action} from "routing-controllers";
 
 const isProduction = process.env.NODE_ENV === "production";
 if (!isProduction) {
-    dotenv.config();
+    // dotenv.config();
 }
 const client = new OAuth2Client(process.env.APP_ID);
 
