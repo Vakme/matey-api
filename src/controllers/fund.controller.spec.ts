@@ -45,8 +45,12 @@ describe("test fund controller", () => {
                 }]
         };
         mockingoose(UserModel).toReturn(insDoc, "findOne");
+        const retDoc = {
+            me: insDoc,
+            partner: insDoc
+        };
         return fundController.getUserExpenses("name@email.com").then((doc) => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(insDoc);
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(retDoc);
         });
     });
 
