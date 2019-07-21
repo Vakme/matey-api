@@ -9,7 +9,7 @@ import {
     NotFoundError,
     OnUndefined,
     Param,
-    Post
+    Post, Put
 } from "routing-controllers";
 import {Fund} from "../models/fund/fund";
 import UserModel from "../models/user/user";
@@ -73,6 +73,23 @@ export default class FundController {
         const partner = await UserModel.findOne({email: user.partner}, {archive: 0});
         return {
             me: user.toJSON(),
+            partner: partner.toJSON()
+        };
+    }
+
+    @Put("/funds/:id")
+    public async editExpense(@CurrentUser({ required: true }) email: string,
+                             @Param("id") id: string,
+                             @Body() fund: Fund) {
+        const parent: any = await UserModel.findOne({email}, {archive: 0});
+        if (!parent.funds.id(id)) {
+            throw new NotFoundError("Item does not exist");
+        }
+        parent.funds.id(id).set(fund);
+        await parent.save();
+        const partner = await UserModel.findOne({email: parent.partner}, {archive: 0});
+        return {
+            me: parent.toJSON(),
             partner: partner.toJSON()
         };
     }
