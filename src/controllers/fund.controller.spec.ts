@@ -67,13 +67,19 @@ describe("test fund controller", () => {
             value: 20
         };
         const extDoc = {
-            email: "name@email.com",
-            funds: [
-                {
-                    date,
-                    name: "tandeta",
-                    value: 20
-                }]
+            me: {
+                email: "name@email.com",
+                funds: [
+                    {
+                        date,
+                        name: "tandeta",
+                        value: 20
+                    }]
+                },
+            partner: {
+                email:  "name@email.com",
+                funds: [] as Fund[],
+            },
         };
         mockingoose(UserModel).toReturn(insDoc, "findOne");
         return fundController.addExpense("name@email.com", newExpense).then((doc) => {
