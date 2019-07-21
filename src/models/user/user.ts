@@ -6,6 +6,9 @@ export class User extends Typegoose {
     @prop({ unique: true })
     public email: string;
 
+    @prop({ unique: true})
+    public partner: string;
+
     @arrayProp({items: Fund})
     public funds: Fund[];
 
