@@ -5,8 +5,8 @@ import {
     Delete,
     Get,
     HttpCode,
-    InternalServerError,
-    JsonController, NotFoundError,
+    JsonController,
+    NotFoundError,
     OnUndefined,
     Param,
     Post
@@ -34,7 +34,17 @@ export default class FundController {
 
     @Get("/summary")
     public async sumUpFunds(@CurrentUser({ required: true }) email: string) {
-        const summaryQuery = [{
+        const partner = await UserModel.findOne({email}, {partner: 1});
+        const summaryQuery = [
+            {
+                $match: {
+                    email: {
+                        $in: [
+                            email, partner.partner
+                        ]
+                    }
+                }
+            }, {
             $project: {
                 summary: {
                     $divide: [{
@@ -45,6 +55,7 @@ export default class FundController {
             }
         }];
         const sums = await UserModel.aggregate(summaryQuery);
+        console.log(sums);
         return {
             creditor: sums.find((elem) =>
                 elem.summary === Math.max(...sums.map((maxElem) =>
@@ -59,7 +70,11 @@ export default class FundController {
     @Get("/funds")
     public async getUserExpenses(@CurrentUser({ required: true }) email: string) {
         const user = await UserModel.findOne({email});
-        return user.toJSON();
+        const partner = await UserModel.findOne({email: user.partner});
+        return {
+            me: user.toJSON(),
+            partner: partner.toJSON()
+        };
     }
 
     @HttpCode(201)
