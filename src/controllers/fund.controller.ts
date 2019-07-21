@@ -83,7 +83,11 @@ export default class FundController {
         const parent: any = await UserModel.findOne({email});
         parent.funds.push(fund);
         await parent.save();
-        return parent.toJSON();
+        const partner = await UserModel.findOne({email: parent.partner});
+        return {
+            me: parent.toJSON(),
+            partner: partner.toJSON()
+        };
 
     }
 
