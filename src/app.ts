@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import "reflect-metadata";
 import { useExpressServer } from "routing-controllers";
+import ArchiveController from "./controllers/archive.controller";
 import { isAuthenticated } from "./controllers/auth.controller";
 import FundController from "./controllers/fund.controller";
 
@@ -29,7 +30,7 @@ mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true});
 console.log(process.env.DB_HOST);
 
 useExpressServer(app, {
-    controllers: [FundController],
+    controllers: [FundController, ArchiveController],
     currentUserChecker: isAuthenticated,
 });
 
