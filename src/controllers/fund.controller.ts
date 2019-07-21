@@ -69,8 +69,8 @@ export default class FundController {
 
     @Get("/funds")
     public async getUserExpenses(@CurrentUser({ required: true }) email: string) {
-        const user = await UserModel.findOne({email});
-        const partner = await UserModel.findOne({email: user.partner});
+        const user = await UserModel.findOne({email}, {archive: 0});
+        const partner = await UserModel.findOne({email: user.partner}, {archive: 0});
         return {
             me: user.toJSON(),
             partner: partner.toJSON()
@@ -80,10 +80,10 @@ export default class FundController {
     @HttpCode(201)
     @Post("/funds")
     public async addExpense(@CurrentUser({ required: true }) email: string, @Body() fund: Fund) {
-        const parent: any = await UserModel.findOne({email});
+        const parent: any = await UserModel.findOne({email}, {archive: 0});
         parent.funds.push(fund);
         await parent.save();
-        const partner = await UserModel.findOne({email: parent.partner});
+        const partner = await UserModel.findOne({email: parent.partner}, {archive: 0});
         return {
             me: parent.toJSON(),
             partner: partner.toJSON()
@@ -94,7 +94,7 @@ export default class FundController {
     @Delete("/funds/:id")
     @OnUndefined(204)
     public async removeExpense(@CurrentUser({ required: true }) email: string, @Param("id") id: string) {
-        const parent: any = await UserModel.findOne({email});
+        const parent: any = await UserModel.findOne({email}, {archive: 0});
         if (!parent.funds.id(id)) {
             throw new NotFoundError("Item does not exist");
         }
