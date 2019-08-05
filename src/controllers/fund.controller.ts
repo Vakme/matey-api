@@ -44,11 +44,29 @@ export default class FundController {
                         ]
                     }
                 }
-            }, {
+            },
+            {
+                $project: {
+                    commonFunds: {
+                        $filter: {
+                            input: "$funds",
+                            // tslint:disable-next-line:object-literal-sort-keys
+                            as: "item",
+                            cond: {
+                                $eq: [
+                                    "$$item.type", "common"
+                                ]
+                            }
+                        }
+                    },
+                    email: "$email"
+                }
+            },
+            {
             $project: {
                 summary: {
                     $divide: [{
-                        $sum: "$funds.value"
+                        $sum: "$commonFunds.value"
                     }, 2]
                 },
                 user: "$email"
