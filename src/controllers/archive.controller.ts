@@ -1,17 +1,10 @@
-import mongoose from "mongoose";
 import {
-    Body,
     CurrentUser,
-    Delete,
     Get,
     HttpCode,
     JsonController,
-    NotFoundError,
-    OnUndefined,
-    Param,
     Post
 } from "routing-controllers";
-import {Fund} from "../models/fund/fund";
 import UserModel from "../models/user/user";
 
 @JsonController()

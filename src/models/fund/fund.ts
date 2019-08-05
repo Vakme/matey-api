@@ -1,5 +1,10 @@
 import {prop, Typegoose} from "typegoose";
 
+enum TYPE {
+    COMMON = "common",
+    PERSONAL = "personal",
+}
+
 export class Fund extends Typegoose {
     @prop()
     public date: Date;
@@ -9,6 +14,9 @@ export class Fund extends Typegoose {
 
     @prop()
     public value: number;
+
+    @prop({enum: TYPE})
+    public type?: TYPE;
 }
 
 const FundModel = new Fund().getModelForClass(Fund, {
