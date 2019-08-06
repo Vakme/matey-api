@@ -47,14 +47,34 @@ export default class FundController {
             },
             {
                 $project: {
-                    commonFunds: {
+                    commonIncomes: {
                         $filter: {
                             input: "$funds",
                             // tslint:disable-next-line:object-literal-sort-keys
                             as: "item",
-                            cond: {
-                                $eq: [
-                                    "$$item.type", "common"
+                            cond: { $and: [
+                                    { $eq: [
+                                            "$$item.subtype", "common"
+                                        ]},
+                                    { $eq: [
+                                            "$$item.type", "income"
+                                        ]}
+                                ]
+                            }
+                        }
+                    },
+                    commonOutcomes: {
+                        $filter: {
+                            input: "$funds",
+                            // tslint:disable-next-line:object-literal-sort-keys
+                            as: "item",
+                            cond: { $and: [
+                                    { $eq: [
+                                    "$$item.subtype", "common"
+                                ]},
+                                    { $eq: [
+                                            "$$item.type", "outcome"
+                                    ]}
                                 ]
                             }
                         }
@@ -66,7 +86,10 @@ export default class FundController {
             $project: {
                 summary: {
                     $divide: [{
-                        $sum: "$commonFunds.value"
+                        $subtract: [
+                            {$sum: "$commonOutcomes.value"},
+                            {$sum: "$commonIncomes.value"}
+                        ]
                     }, 2]
                 },
                 user: "$email"

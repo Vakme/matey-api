@@ -1,8 +1,12 @@
 import {prop, Typegoose} from "typegoose";
 
-enum TYPE {
+enum SUBTYPE {
     COMMON = "common",
     PERSONAL = "personal",
+}
+enum TYPE {
+    INCOME = "income",
+    OUTCOME = "outcome",
 }
 
 export class Fund extends Typegoose {
@@ -16,7 +20,10 @@ export class Fund extends Typegoose {
     public value: number;
 
     @prop({enum: TYPE})
-    public type?: TYPE;
+    public type: TYPE;
+
+    @prop({enum: SUBTYPE})
+    public subtype?: SUBTYPE;
 }
 
 const FundModel = new Fund().getModelForClass(Fund, {
