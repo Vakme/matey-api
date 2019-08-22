@@ -6,3 +6,5 @@ patch:
   SNYK-JS-LODASH-450202:
     - mongoose > async > lodash:
         patched: '2019-08-22T19:05:02.825Z'
+    - snyk > snyk-nuget-plugin > dotnet-deps-parser > lodash:
+        patched: '2019-08-22T19:22:56.000Z'
