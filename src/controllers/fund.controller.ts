@@ -9,9 +9,12 @@ import {
     NotFoundError,
     OnUndefined,
     Param,
-    Post, Put
+    Post,
+    Put
 } from "routing-controllers";
+import {ConflictError} from "../errors/ConflictError";
 import {Fund} from "../models/fund/fund";
+import TypeModel, {Type} from "../models/type/type";
 import UserModel from "../models/user/user";
 
 @JsonController()
@@ -116,6 +119,26 @@ export default class FundController {
             me: user.toJSON(),
             partner: partner.toJSON()
         };
+    }
+
+    @Get("/types")
+    public async getPredefinedExpenseTypes(@CurrentUser({ required: true }) email: string) {
+        const types = await TypeModel.find();
+        return types.map((t) => t.toJSON());
+    }
+
+    @HttpCode(201)
+    @Post("/types")
+    public async addPredefinedExpenseType(@CurrentUser({ required: true }) email: string, @Body() type: Type) {
+        if (await TypeModel.findOne({name: type.name})) {
+            throw new ConflictError("duplicated content");
+        }
+        await TypeModel.create({
+            email,
+            locales: type.locales,
+            name: type.name
+        });
+        return await this.getPredefinedExpenseTypes(email);
     }
 
     @Put("/funds/:id")
