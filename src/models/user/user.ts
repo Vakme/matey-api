@@ -1,12 +1,13 @@
-import {arrayProp, prop, Typegoose} from "typegoose";
+import * as EmailValidator from "email-validator";
+import { arrayProp, prop, Typegoose } from "typegoose";
 import { Fund } from "../fund/fund";
 
 export class User extends Typegoose {
 
-    @prop({ unique: true })
+    @prop({ required: true, unique: true, validate: (value) => EmailValidator.validate(value)})
     public email: string;
 
-    @prop({ unique: true})
+    @prop({ unique: true, validate: (value) => EmailValidator.validate(value)})
     public partner: string;
 
     @arrayProp({items: Fund})

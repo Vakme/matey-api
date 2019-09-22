@@ -10,6 +10,9 @@ import { useExpressServer } from "routing-controllers";
 import ArchiveController from "./controllers/archive.controller";
 import { isAuthenticated } from "./controllers/auth.controller";
 import FundController from "./controllers/fund.controller";
+import HealthController from "./controllers/health.controller";
+import SummaryController from "./controllers/summary.controller";
+import TypeController from "./controllers/type.controller";
 
 const isProduction = process.env.NODE_ENV === "production";
 // mongoose.Promise = global.Promise;
@@ -29,7 +32,7 @@ mongoose.set("useFindAndModify", false);
 mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true});
 
 useExpressServer(app, {
-    controllers: [FundController, ArchiveController],
+    controllers: [FundController, ArchiveController, TypeController, SummaryController, HealthController],
     currentUserChecker: isAuthenticated,
 });
 

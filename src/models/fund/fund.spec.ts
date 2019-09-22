@@ -13,6 +13,7 @@ describe("test mongoose User model", () => {
         };
         const exDoc = {
             date: "2019-06-12T06:01:17.171Z",
+            id: "5d2a4577ea5aa62214676532",
             name: "tv",
             value: 5000
         };

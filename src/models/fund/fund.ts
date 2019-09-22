@@ -4,22 +4,25 @@ enum SUBTYPE {
     COMMON = "common",
     PERSONAL = "personal",
 }
-enum TYPE {
+export enum TYPE {
     INCOME = "income",
     OUTCOME = "outcome",
 }
 
 export class Fund extends Typegoose {
-    @prop()
+    @prop({ required: true })
     public date: Date;
 
-    @prop()
+    @prop({ required: true })
     public name: string;
 
-    @prop()
+    @prop({ min: 0, required: true })
     public value: number;
 
-    @prop({enum: TYPE})
+    @prop({maxlength: 50})
+    public description?: string;
+
+    @prop({required: true, enum: TYPE})
     public type: TYPE;
 
     @prop({enum: SUBTYPE})
