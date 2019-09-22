@@ -1,4 +1,5 @@
 import {CurrentUser, Get, JsonController} from "routing-controllers";
+import {Fund, TYPE} from "../models/fund/fund";
 import UserModel from "../models/user/user";
 
 @JsonController()
@@ -76,5 +77,41 @@ export default class SummaryController {
             diff: sums.reduce((prev, next) =>
                 Math.abs(prev.summary - next.summary))
         };
+    }
+
+    @Get("/summary/chart")
+    public async sumUpChart(@CurrentUser({ required: true }) email: string) {
+        const user = await UserModel.findOne({email});
+        const partner = await UserModel.findOne({email: user.partner});
+        let incomes = [] as any[];
+        let outcomes = [] as any[];
+        const allExpenses: Fund[] = user.funds.concat(user.archive, partner.archive, partner.funds);
+        for (const expense of allExpenses) {
+            if (expense.type === TYPE.INCOME) {
+               incomes = this.pushToArray(incomes, expense);
+            } else {
+               outcomes = this.pushToArray(outcomes, expense);
+            }
+        }
+        const summary = await this.sumUpFunds(email);
+        return {incomes, outcomes, summary};
+    }
+
+    private pushToArray(arr: any[], expense: Fund) {
+        const currentIndex = arr.findIndex((x) =>
+            x.name.trim() === expense.name.trim() &&
+            x.month === expense.date.getMonth() &&
+            x.year === expense.date.getFullYear());
+        if (currentIndex >= 0) {
+            arr[currentIndex].value += expense.value;
+        } else {
+            arr.push({
+                month: expense.date.getMonth(),
+                name: expense.name.trim(),
+                value: expense.value,
+                year: expense.date.getFullYear()
+            });
+        }
+        return arr;
     }
 }
