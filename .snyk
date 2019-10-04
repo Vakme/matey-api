@@ -8,3 +8,24 @@ patch:
         patched: '2019-08-22T19:05:02.825Z'
     - snyk > snyk-nuget-plugin > dotnet-deps-parser > lodash:
         patched: '2019-08-22T19:22:56.000Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - google-auth-library > gaxios > https-proxy-agent:
+        patched: '2019-10-04T02:59:23.353Z'
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-04T02:59:23.353Z'
+    - '@google-cloud/debug-agent > gcp-metadata > gaxios > https-proxy-agent':
+        patched: '2019-10-04T02:59:23.353Z'
+    - google-auth-library > gcp-metadata > gaxios > https-proxy-agent:
+        patched: '2019-10-04T02:59:23.353Z'
+    - google-auth-library > gtoken > gaxios > https-proxy-agent:
+        patched: '2019-10-04T02:59:23.353Z'
+    - '@google-cloud/debug-agent > @google-cloud/common > teeny-request > https-proxy-agent':
+        patched: '2019-10-04T02:59:23.353Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-04T02:59:23.353Z'
+    - '@google-cloud/debug-agent > @google-cloud/common > google-auth-library > gaxios > https-proxy-agent':
+        patched: '2019-10-04T02:59:23.353Z'
+    - '@google-cloud/debug-agent > @google-cloud/common > google-auth-library > gcp-metadata > gaxios > https-proxy-agent':
+        patched: '2019-10-04T02:59:23.353Z'
+    - '@google-cloud/debug-agent > @google-cloud/common > google-auth-library > gtoken > gaxios > https-proxy-agent':
+        patched: '2019-10-04T02:59:23.353Z'
