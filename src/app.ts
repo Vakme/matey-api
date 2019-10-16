@@ -11,6 +11,7 @@ import ArchiveController from "./controllers/archive.controller";
 import { isAuthenticated } from "./controllers/auth.controller";
 import FundController from "./controllers/fund.controller";
 import HealthController from "./controllers/health.controller";
+import ShopListController from "./controllers/shoplist.controller";
 import SummaryController from "./controllers/summary.controller";
 import TypeController from "./controllers/type.controller";
 
@@ -32,7 +33,13 @@ mongoose.set("useFindAndModify", false);
 mongoose.connect(process.env.DB_HOST, {useNewUrlParser: true});
 
 useExpressServer(app, {
-    controllers: [FundController, ArchiveController, TypeController, SummaryController, HealthController],
+    controllers: [
+        FundController,
+        ArchiveController,
+        TypeController,
+        SummaryController,
+        ShopListController,
+        HealthController],
     currentUserChecker: isAuthenticated,
 });
 
