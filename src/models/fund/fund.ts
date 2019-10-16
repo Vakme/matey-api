@@ -22,7 +22,7 @@ export class Fund extends Typegoose {
     @prop({maxlength: 50})
     public description?: string;
 
-    @prop({required: true, enum: TYPE})
+    @prop({required: true, enum: TYPE, default: "outcome"})
     public type: TYPE;
 
     @prop({enum: SUBTYPE})
