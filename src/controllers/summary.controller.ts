@@ -1,4 +1,4 @@
-import {IsInt, IsOptional, IsPositive, Max, Min} from "class-validator";
+import {IsOptional} from "class-validator";
 import {CurrentUser, Get, JsonController, QueryParams} from "routing-controllers";
 import {Fund, TYPE} from "../models/fund/fund";
 import UserModel from "../models/user/user";
@@ -89,31 +89,41 @@ export default class SummaryController {
         };
     }
 
-    @Get("/summary/chart2")
+    @Get("/summary/chart")
     public async typesChart(@CurrentUser({ required: true }) email: string, @QueryParams() query: MonthYearQuery) {
         const user = await UserModel.findOne({email});
         const partner = await UserModel.findOne({email: user.partner});
-        const allExpenses: Fund[] = user.funds.concat(user.archive, partner.archive, partner.funds);
-        return this.prepareChartData(allExpenses, query.year, query.month);
+        const allExpenses: Fund[] = user.archive.concat(partner.archive, user.funds, partner.funds);
+        return this.prepareChartData(email, allExpenses, query.year, query.month);
 
     }
 
-    @Get("/summary/chart")
-    public async sumUpChart(@CurrentUser({ required: true }) email: string) {
+    @Get("/summary/trendChart")
+    public async getTrendChart(@CurrentUser({ required: true }) email: string) {
         const user = await UserModel.findOne({email});
         const partner = await UserModel.findOne({email: user.partner});
-        let incomes = [] as any[];
-        let outcomes = [] as any[];
-        const allExpenses: Fund[] = user.funds.concat(user.archive, partner.archive, partner.funds);
+        const allExpenses: Fund[] = user.archive.concat(partner.archive, user.funds, partner.funds);
+        const categories = this.prepareDateList(allExpenses);
+        const labels = [TYPE.INCOME, TYPE.OUTCOME];
+        const months = {
+            income: [] as number[],
+            outcome: [] as number[]
+        };
         for (const expense of allExpenses) {
-            if (expense.type === TYPE.INCOME) {
-               incomes = this.pushToArray(incomes, expense);
-            } else {
-               outcomes = this.pushToArray(outcomes, expense);
+            if (!expense.type) {
+                expense.type = TYPE.OUTCOME;
             }
         }
-        const summary = await this.sumUpFunds(email);
-        return {incomes, outcomes, summary};
+        for (const category of categories) {
+            const values = this.prepareData(
+                labels,
+                this.filterByDate(allExpenses, category.year, category.month),
+                "type");
+            months.income.push(values[0]);
+            months.outcome.push(values[1]);
+        }
+        return {categories, labels, months};
+
     }
 
     private prepareDateList(expenseArray: Fund[]) {
@@ -126,14 +136,15 @@ export default class SummaryController {
         return Array.from(dates).map((x) => JSON.parse(x));
     }
 
-    private prepareChartData(expenseArray: Fund[], year?: number, month?: number) {
+    private async prepareChartData(email: string, expenseArray: Fund[], year?: number, month?: number) {
         const labels = this.prepareLabels(expenseArray);
         const dates = this.prepareDateList(expenseArray);
         if (!!year && !!month) {
             expenseArray = this.filterByDate(expenseArray, year, month);
         }
-        const data = this.prepareData(labels, expenseArray);
-        return { labels, data, dates };
+        const values = this.prepareData(labels, expenseArray);
+        const summary = await this.sumUpFunds(email);
+        return { labels, values, dates, summary };
     }
 
     private filterByDate(expenseArray: Fund[], year: number, month: number) {
@@ -150,33 +161,15 @@ export default class SummaryController {
             .filter((elem, ind, arr) => arr.indexOf(elem) === ind);
     }
 
-    private prepareData(labels: string[], expenseArray: Fund[]) {
+    private prepareData(labels: string[], expenseArray: Fund[], filterType = "name") {
         const dataArr: number[] = [];
         labels.forEach((label) => {
             const sum = expenseArray
-                            .filter((elem) => elem.name.trim() === label)
+                            .filter((elem: any) => elem[filterType].trim() === label)
                             .map((elem) => elem.value)
                             .reduce((prevElem, currElem) => prevElem + currElem, 0);
             dataArr.push(sum);
         });
         return dataArr;
-    }
-
-    private pushToArray(arr: any[], expense: Fund) {
-        const currentIndex = arr.findIndex((x) =>
-            x.name.trim() === expense.name.trim() &&
-            x.month === expense.date.getMonth() &&
-            x.year === expense.date.getFullYear());
-        if (currentIndex >= 0) {
-            arr[currentIndex].value += expense.value;
-        } else {
-            arr.push({
-                month: expense.date.getMonth(),
-                name: expense.name.trim(),
-                value: expense.value,
-                year: expense.date.getFullYear()
-            });
-        }
-        return arr;
     }
 }
