@@ -1,3 +1,4 @@
+import {tsUndefinedKeyword} from "@babel/types";
 import {
     Body,
     CurrentUser,
@@ -72,6 +73,22 @@ export default class ShopListController {
         parent.items.id(itemId).set(item);
         await parent.save();
         return await this.getShopLists(email);
+    }
+
+    @Delete("/shoplist/:listId/items")
+    @OnUndefined(204)
+    public async removeManyShopListItems(@CurrentUser({required: true}) email: string,
+                                         @Param("listId") listId: string,
+                                         @Body() idList: string[]) {
+        const parent: any = await ShopListModel.findById(listId);
+        if (!parent) {
+            throw new NotFoundError("Item does not exist");
+        }
+        for (const itemId of idList) {
+            parent.items.id(itemId).remove();
+        }
+        await parent.save();
+        return parent.items.id(idList[0]);
     }
 
     @Delete("/shoplist/:listId/items/:itemId")
