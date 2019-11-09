@@ -1,4 +1,4 @@
-import {prop, Typegoose} from "typegoose";
+import {prop, Typegoose} from "@typegoose/typegoose";
 
 class Locales {
     @prop()

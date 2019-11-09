@@ -1,5 +1,5 @@
+import { arrayProp, prop, Typegoose } from "@typegoose/typegoose";
 import * as EmailValidator from "email-validator";
-import { arrayProp, prop, Typegoose } from "typegoose";
 
 export class ShopListItem extends Typegoose {
     @prop({ required: true })
