@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "dependencies": {
-    "@google-cloud/debug-agent": "^4.0.1",
-    "axios": "^0.19.0",
+    "@google-cloud/debug-agent": "^5.0.0",
+    "axios": "^0.21.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
@@ -12,15 +12,15 @@
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "google-auth-library": "^4.2.2",
-    "lodash": "^4.17.15",
-    "mongoose": "^5.7.9",
+    "google-auth-library": "^6.0.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^5.13.15",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "reflect-metadata": "^0.1.13",
-    "routing-controllers": "^0.7.7",
-    "snyk": "^1.217.3",
-    "@typegoose/typegoose": "^5.9.1"
+    "routing-controllers": "^0.8.0",
+    "@typegoose/typegoose": "^5.9.1",
+    "@snyk/protect": "latest"
   },
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
@@ -30,8 +30,8 @@
     "test": "jest",
     "cov": "jest --coverage",
     "deploy": "yarn build && gcloud app deploy ",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "snyk-protect": "snyk-protect",
+    "prepublish": "yarn run snyk-protect"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
